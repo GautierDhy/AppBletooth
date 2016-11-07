@@ -30,5 +30,11 @@
         android:text="SCAN"
         android:layout_below="@+id/bluetooth_button" />
 
+    <ListView
+        android:id="@+id/device_ListView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scan_button" />
+
 
 </RelativeLayout>

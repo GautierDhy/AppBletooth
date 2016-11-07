@@ -9,7 +9,9 @@ import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     Button mBluetoothButton;
     Button mScanButton;
-    ArrayList mArrayAdapter = new ArrayList();
+    ArrayList<String> mArrayAdapter = new ArrayList<>();
+    ListView mDeviceListView;
 
     BluetoothAdapter mbluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private final static int REQUEST_CODE_ENABLE_BLUETOOTH = 0;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         mScanButton = (Button) findViewById(R.id.scan_button);
         mBluetoothButton = (Button) findViewById(R.id.bluetooth_button);
+        mDeviceListView = (ListView) findViewById(R.id.device_ListView);
 
         if (mbluetoothAdapter == null)
             Toast.makeText(MainActivity.this, "Pas de Bluetooth",
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
                 registerReceiver(bluetoothReceiver, filter);
                 mbluetoothAdapter.startDiscovery();
             }
@@ -80,10 +85,14 @@ public class MainActivity extends AppCompatActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 Toast.makeText(MainActivity.this, "New Device = " + device.getName(), Toast.LENGTH_SHORT).show();
                 mArrayAdapter.add(device.getName() + " " + device.getAddress());
-                for(int i=0; i<mArrayAdapter.size();i++)
-                {
-                    System.out.println("Device " + i + " : " +mArrayAdapter.get(i));
-                }
+            }
+            if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
+                        getApplicationContext(),
+                        android.R.layout.simple_list_item_1,
+                        mArrayAdapter
+                );
+                    mDeviceListView.setAdapter(stringArrayAdapter);
             }
         }
     };
