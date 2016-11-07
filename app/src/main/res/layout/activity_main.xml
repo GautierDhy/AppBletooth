@@ -21,14 +21,14 @@
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:text="BLUETOOTH"
-        android:layout_below="@+id/scan_button" />
+        android:layout_below="@+id/nom_app_textview" />
 
     <Button
         android:id="@+id/scan_button"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:text="SCAN"
-        android:layout_below="@+id/nom_app_textview" />
+        android:layout_below="@+id/bluetooth_button" />
 
 
 </RelativeLayout>
