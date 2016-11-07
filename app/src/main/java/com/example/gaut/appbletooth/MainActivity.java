@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
                         getApplicationContext(),
-                        android.R.layout.simple_list_item_1,
+                        R.layout.simple_list1,
                         mArrayAdapter
                 );
                     mDeviceListView.setAdapter(stringArrayAdapter);
