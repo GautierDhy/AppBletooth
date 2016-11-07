@@ -12,10 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     Button mBluetoothButton;
     Button mScanButton;
+    ArrayList mArrayAdapter = new ArrayList();
 
     BluetoothAdapter mbluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private final static int REQUEST_CODE_ENABLE_BLUETOOTH = 0;
@@ -76,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 Toast.makeText(MainActivity.this, "New Device = " + device.getName(), Toast.LENGTH_SHORT).show();
+                mArrayAdapter.add(device.getName() + " " + device.getAddress());
+                for(int i=0; i<mArrayAdapter.size();i++)
+                {
+                    System.out.println("Device " + i + " : " +mArrayAdapter.get(i));
+                }
             }
         }
     };
