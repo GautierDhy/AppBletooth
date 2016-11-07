@@ -80,4 +80,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mbluetoothAdapter.cancelDiscovery();
+        unregisterReceiver(bluetoothReceiver);
+    }
 }
