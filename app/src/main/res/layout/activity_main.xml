@@ -18,24 +18,34 @@
 
     <Button
         android:id="@+id/bluetooth_button"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="75dp"
         android:text="BLUETOOTH"
         android:layout_below="@+id/nom_app_textview" />
 
     <Button
         android:id="@+id/scan_button"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="75dp"
         android:text="SCAN"
-        android:layout_below="@+id/bluetooth_button" />
+        android:layout_toRightOf="@+id/bluetooth_button"
+        android:layout_below="@+id/nom_app_textview"  />
 
     <ListView
         android:id="@+id/device_ListView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scan_button"
+        android:layout_below="@+id/iv_animation"
         android:textColor="@android:color/black"/>
+
+    <ImageView
+        android:id="@+id/iv_animation"
+        android:adjustViewBounds="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/scan_button"
+        android:contentDescription="Animation"/>
 
 
 </RelativeLayout>
