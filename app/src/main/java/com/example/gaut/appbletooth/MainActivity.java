@@ -18,19 +18,26 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    BluetoothSocket mBluetoothSocket = null;
+    BluetoothDevice Connectiondevice = null;
     Button mBluetoothButton;
     Button mScanButton;
     ArrayList<String> mArrayAdapter = new ArrayList<>();
     ArrayList<BluetoothDevice> mArrayDevice = new ArrayList<>();
     ListView mDeviceListView;
-
     BluetoothAdapter mbluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private final static int REQUEST_CODE_ENABLE_BLUETOOTH = 0;
 
+    private final static int REQUEST_CODE_ENABLE_BLUETOOTH = 0;
+    private ConnectThread mConnectThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +80,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, "Device = " + mArrayAdapter.get(position), Toast.LENGTH_SHORT).show();
-                BluetoothDevice device = mArrayDevice.get(position);
+                BluetoothDevice Connectiondevice = mArrayDevice.get(position);
 
-
+                mConnectThread = new ConnectThread(Connectiondevice);
+                mConnectThread.start();
             }
         });
+
+        // Liste des appareils déjà connéctés
+        // et si ils le sot les ajoutés à la liste des devices
+
+        Set<BluetoothDevice> pairedDevices =  mbluetoothAdapter.getBondedDevices();
+        if (pairedDevices.size()>0){
+            findViewById(R.id.activity_main).setVisibility(View.VISIBLE);
+            for (BluetoothDevice Itemdevices : pairedDevices){
+                mArrayAdapter.add(Itemdevices.getName() + "\n" + Itemdevices.getAddress());
+                mArrayDevice.add(Itemdevices);
+            }
+        }
     }
 
     @Override
@@ -91,15 +111,17 @@ public class MainActivity extends AppCompatActivity {
             // L'utilisation n'a pas activé le bluetooth
         }
     }
-    
+
     private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                Toast.makeText(MainActivity.this, "New Device = " + device.getName(), Toast.LENGTH_SHORT).show();
-                mArrayAdapter.add(device.getName() + " " + device.getAddress());
-                mArrayDevice.add(device);
+                BluetoothDevice Itemdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (Itemdevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                Toast.makeText(MainActivity.this, "New Device = " + Itemdevice.getName(), Toast.LENGTH_SHORT).show();
+                mArrayAdapter.add(Itemdevice.getName() + " " + Itemdevice.getAddress());
+                mArrayDevice.add(Itemdevice);
+            }
             }
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
@@ -108,11 +130,48 @@ public class MainActivity extends AppCompatActivity {
                         mArrayAdapter
                 );
                     mDeviceListView.setAdapter(new ArrayAdapter<String>(context,android.R.layout.simple_expandable_list_item_1,mArrayAdapter));
+
             }
+
         }
 
     };
 
+   public class ConnectThread extends Thread {
+
+       private final BluetoothDevice mmDevice;
+       private final BluetoothSocket mmSocket;
+
+       public ConnectThread(BluetoothDevice Connectiondevice){
+
+           BluetoothSocket tmp = null;
+           mmDevice = Connectiondevice;
+           try {
+               tmp = Connectiondevice.createRfcommSocketToServiceRecord(UUID.randomUUID());
+           } catch (IOException e){}
+           mmSocket = tmp;
+    }
+     public void run(){
+     mbluetoothAdapter.cancelDiscovery();
+         try {
+             mmSocket.connect();
+         } catch (IOException connectException) {
+             try {
+                 mmSocket.close();
+             } catch (IOException closeException) {
+             }
+             return;
+         }
+
+   }
+    public void cancel(){
+
+        try {
+            mmSocket.close();
+        } catch (IOException e){}
+
+    }
+   }
 
     @Override
     protected void onDestroy() {
