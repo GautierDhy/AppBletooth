@@ -1,7 +1,9 @@
 package com.example.gaut.appbletooth;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +16,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Button mBluetoothButton;
     Button mScanButton;
     ArrayList<String> mArrayAdapter = new ArrayList<>();
+    ArrayList<BluetoothDevice> mArrayDevice = new ArrayList<>();
     ListView mDeviceListView;
     ImageView mAnimImageView;
     BluetoothAdapter mbluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -79,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
 
         mAnimImageView = (ImageView) findViewById(R.id.iv_animation);
 
+        mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, "Device = " + mArrayAdapter.get(position), Toast.LENGTH_SHORT).show();
+                BluetoothDevice device = mArrayDevice.get(position);
+
+
+            }
+        });
     }
 
     @Override
@@ -92,32 +107,38 @@ public class MainActivity extends AppCompatActivity {
             // L'utilisation n'a pas activé le bluetooth
         }
     }
-
+    
     private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-
+            final GifFrames gifFrames = new GifFrames();
             final Handler handler = new Handler();
+            stopBitmap = 0;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+
                     if (stopBitmap == 1){
                         mAnimImageView.setImageBitmap(null);
                     }
                     else {
-                        mAnimImageView.setImageBitmap(GifFrames.getGifs(getApplicationContext(),nextBitmap));
+                        mAnimImageView.setImageBitmap(gifFrames.getGifs(getApplicationContext(),nextBitmap));
                         nextBitmap++;
-                        handler.postDelayed(this,200);
+                        handler.postDelayed(this,100);
                     }
+
+
                 }
-            },0);
+            },100);
 
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 Toast.makeText(MainActivity.this, "New Device = " + device.getName(), Toast.LENGTH_SHORT).show();
                 mArrayAdapter.add(device.getName() + " " + device.getAddress());
                 stopBitmap = 0;
+                mArrayDevice.add(device);
             }
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
@@ -125,11 +146,13 @@ public class MainActivity extends AppCompatActivity {
                         R.layout.simple_list1,
                         mArrayAdapter
                 );
-                mDeviceListView.setAdapter(stringArrayAdapter);
                 stopBitmap = 1;
+                    mDeviceListView.setAdapter(new ArrayAdapter<String>(context,android.R.layout.simple_expandable_list_item_1,mArrayAdapter));
             }
         }
+
     };
+
 
     @Override
     protected void onStart() {
