@@ -47,19 +47,5 @@
         android:layout_below="@+id/scan_button"
         android:contentDescription="Animation"/>
 
-    <TextView
-        android:id="@+id/gps_position_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/map_activity_button"
-        android:layout_width="wrap_content"
-        android:layout_height="75dp"
-        android:layout_toRightOf="@+id/scan_button"
-        android:layout_below="@+id/nom_app_textview"
-
-        android:text="MAP ACTIVITY" />
-
 
 </RelativeLayout>
