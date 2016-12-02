@@ -29,16 +29,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.List;
 import java.util.Random;
 
 import static java.security.AccessController.getContext;
-=======
 import java.util.Set;
 import java.util.UUID;
-
->>>>>>> BranchCo
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,18 +45,13 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> mArrayAdapter = new ArrayList<>();
     ArrayList<BluetoothDevice> mArrayDevice = new ArrayList<>();
     ListView mDeviceListView;
-<<<<<<< HEAD
     ImageView mAnimImageView;
-    BluetoothAdapter mbluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private final static int REQUEST_CODE_ENABLE_BLUETOOTH = 0;
     int nextBitmap = 0;
     int stopBitmap = 0;
-=======
     BluetoothAdapter mbluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    private final static int REQUEST_CODE_ENABLE_BLUETOOTH = 0;
     private ConnectThread mConnectThread;
->>>>>>> BranchCo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,20 +155,13 @@ public class MainActivity extends AppCompatActivity {
             },100);
 
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-<<<<<<< HEAD
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                Toast.makeText(MainActivity.this, "New Device = " + device.getName(), Toast.LENGTH_SHORT).show();
-                mArrayAdapter.add(device.getName() + " " + device.getAddress());
                 stopBitmap = 0;
-                mArrayDevice.add(device);
-=======
                 BluetoothDevice Itemdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (Itemdevice.getBondState() != BluetoothDevice.BOND_BONDED) {
                 Toast.makeText(MainActivity.this, "New Device = " + Itemdevice.getName(), Toast.LENGTH_SHORT).show();
                 mArrayAdapter.add(Itemdevice.getName() + " " + Itemdevice.getAddress());
                 mArrayDevice.add(Itemdevice);
-            }
->>>>>>> BranchCo
+
             }
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
@@ -192,9 +176,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-    };
+    }
 
-   public class ConnectThread extends Thread {
+   class ConnectThread extends Thread {
 
        private final BluetoothDevice mmDevice;
        private final BluetoothSocket mmSocket;
