@@ -139,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
                 mConnectThread.start();
             }
         });
-
-<<<<<<< HEAD
         // Liste des appareils déjà connéctés
         // et si ils le sot les ajoutés à la liste des devices
 
@@ -152,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                 mArrayDevice.add(Itemdevices);
             }
         }
-=======
 //---------------------------------------------------------------
         mPositionGPSTextView = (TextView) findViewById(R.id.gps_position_textview);
         mMapActivityButton = (Button) findViewById(R.id.map_activity_button);
@@ -172,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.getMainLooper());
 
 //---------------------------------------------------------------
->>>>>>> parent of e130f59... Revert "Projet final"
     }
 
     @Override
@@ -191,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-          /*  final GifFrames gifFrames = new GifFrames();
+            final GifFrames gifFrames = new GifFrames();
             final Handler handler = new Handler();
             stopBitmap = 0;
             handler.postDelayed(new Runnable() {
@@ -210,16 +206,17 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }
-            },100);*/
+            },100);
 
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 stopBitmap = 0;
                 BluetoothDevice Itemdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (Itemdevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                Toast.makeText(MainActivity.this, "New Device = " + Itemdevice.getName(), Toast.LENGTH_SHORT).show();
-                mArrayAdapter.add(Itemdevice.getName() + " " + Itemdevice.getAddress());
-                mArrayDevice.add(Itemdevice);
+                    Toast.makeText(MainActivity.this, "New Device = " + Itemdevice.getName(), Toast.LENGTH_SHORT).show();
+                    mArrayAdapter.add(Itemdevice.getName() + " " + Itemdevice.getAddress());
+                    mArrayDevice.add(Itemdevice);
 
+                }
             }
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
@@ -228,22 +225,17 @@ public class MainActivity extends AppCompatActivity {
                         mArrayAdapter
                 );
                 stopBitmap = 1;
-<<<<<<< HEAD
                     mDeviceListView.setAdapter(new ArrayAdapter<String>(context,android.R.layout.simple_expandable_list_item_1,mArrayAdapter));
 
-=======
-                    mDeviceListView.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_expandable_list_item_1, mArrayAdapter));
                 Toast.makeText(MainActivity.this, "Scan fini", Toast.LENGTH_LONG).show();
->>>>>>> parent of e130f59... Revert "Projet final"
             }
 
         }
 
-    }
+    };
 
-   class ConnectThread extends Thread {
+   public class ConnectThread extends Thread {
 
-<<<<<<< HEAD
        private final BluetoothDevice mmDevice;
        private final BluetoothSocket mmSocket;
 
@@ -277,14 +269,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
    }
-=======
     @Override
     protected void onResume() {
         super.onResume();
 
         mHandler.post(mUIRunnable);
     }
->>>>>>> parent of e130f59... Revert "Projet final"
 
     @Override
     protected void onStart() {
